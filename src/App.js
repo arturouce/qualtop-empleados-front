@@ -1,26 +1,34 @@
-import React from 'react';
-import logo from './logo.svg';
+import React, { Fragment, useState, useEffect } from 'react';
+
+import Employee from "./components/employee/Employee";
+
+
 import './App.css';
 
 function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+
+    const getEmployees = async () => {
+
+        const employeesFetch = await fetch('http://localhost:8080/employee/all');
+
+        return await employeesFetch.json();
+    };
+
+    const [employees, findAllEmployees] = useState([])
+
+    useEffect( () => {
+
+        getEmployees().then(response => findAllEmployees(response))
+    }, []);
+
+    return (
+        <Fragment>
+            <Employee
+                employees={employees}
+                findAllEmployees={findAllEmployees}
+            />
+        </Fragment>
+    );
 }
 
 export default App;
